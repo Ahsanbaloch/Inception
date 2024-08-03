@@ -1,6 +1,6 @@
 # Define the paths
-WP_DATA = /Home/data/wordpress  
-DB_DATA = /Home/data/mariadb
+WP_DATA = /home/data/wordpress  
+DB_DATA = /home/data/mariadb
 COMPOSE_FILE = ./docker-compose.yml
 
 all: up
