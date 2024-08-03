@@ -30,19 +30,18 @@ build:
 #remove the wordpress and mariadb data directories.
 #the (|| true) is used to ignore the error if there are no containers running to prevent the make command from stopping.
 clean:
+	@docker down --rmi all -v --remove-orphans || true
 	@docker stop $$(docker ps -qa) || true
 	@docker rm $$(docker ps -qa) || true
 	@docker rmi -f $$(docker images -qa) || true
 	@docker volume rm $$(docker volume ls -q) || true
 	@docker network rm $$(docker network ls -q) || true
-# @read -p "Are you sure you want to remove the wordpress and mariadb data directories? [y/N] " 
-# confirm && [[ $$confirm == [yY] || $$confirm == [yY][eE][sS] ]] || exit 1
 	@rm -rf $(WP_DATA) || true
 	@rm -rf $(DB_DATA) || true
 
 re: clean up
 
 prune: clean
-	@docker system prune -a --volumes -f
+	@docker system prune -a --volumes -f || true
 
 .PHONY: up down stop start build ng mdb wp clean re prune
