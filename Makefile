@@ -1,6 +1,6 @@
 #define the path
-WP_DATA = /home/data/wordpress  
-DB_DATA = /home/data/mariadb
+WP_DATA = $(HOME)/data/wordpress  
+DB_DATA = $(HOME)/data/mariadb
 
 all: up
 
@@ -35,6 +35,8 @@ clean:
 	@docker rmi -f $$(docker images -qa) || true
 	@docker volume rm $$(docker volume ls -q) || true
 	@docker network rm $$(docker network ls -q) || true
+	@read -p "Are you sure you want to remove the wordpress and mariadb data directories? [y/N] " 
+	confirm && [[ $$confirm == [yY] || $$confirm == [yY][eE][sS] ]] || exit 1
 	@rm -rf $(WP_DATA) || true
 	@rm -rf $(DB_DATA) || true
 

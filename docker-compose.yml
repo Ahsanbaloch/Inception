@@ -63,4 +63,4 @@ volumes:
 # the networks part
 networks:
   inception:
-    driver: bridge
+    name: inception
