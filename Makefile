@@ -30,7 +30,7 @@ build:
 #remove the wordpress and mariadb data directories.
 #the (|| true) is used to ignore the error if there are no containers running to prevent the make command from stopping.
 clean:
-	@docker down --rmi all -v --remove-orphans || true
+	@docker-compose down --rmi all -v --remove-orphans || true
 	@docker stop $$(docker ps -qa) || true
 	@docker rm $$(docker ps -qa) || true
 	@docker rmi -f $$(docker images -qa) || true
