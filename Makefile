@@ -1,35 +1,34 @@
-WP_DATA = ~/goinfre/data/wordpress
-DB_DATA = ~/goinfre/data/mariadb
+#define the path
+WP_DATA = /home/data/wordpress  
+DB_DATA = /home/data/mariadb
 
 all: up
 
+# start the biulding process
+# create the wordpress and mariadb data directories.
+# start the containers in the background and leaves them running
 up: build
 	@mkdir -p $(WP_DATA)
 	@mkdir -p $(DB_DATA)
-	docker-compose -f ./srcs/docker-compose.yml up -data
+	docker-compose -f ./docker-compose.yml up -d
 
 down:
-	docker-compose -f ./srcs/docker-compose.yml down
+	docker-compose -f ./docker-compose.yml down
 
 stop:
-	docker-compose -f ./srcs/docker-compose.yml stop
+	docker-compose -f ./docker-compose.yml stop
 
 start:
-	docker-compose -f ./srcs/docker-compose.yml start
+	docker-compose -f ./docker-compose.yml start
 
 build:
-	clear
-	docker compose -f ./srcs/docker-compose.yml build
+	docker compose -f ./docker-compose.yml build
 
-ng:
-	@docker exec -it nginx zsh
-
-mdb:
-	@docker exec -it mariadb zsh
-
-wp:
-	@docker exec -it wordpress zsh
-
+#clean the containers
+#stop all running containers and remove them.
+#remove all images, volumes and networks.
+#remove the wordpress and mariadb data directories.
+#the (|| true) is used to ignore the error if there are no containers running to prevent the make command from stopping.
 clean:
 	@docker stop $$(docker ps -qa) || true
 	@docker rm $$(docker ps -qa) || true
