@@ -1,6 +1,6 @@
 #define the path
-WP_DATA = $(HOME)/data/wordpress  
-DB_DATA = $(HOME)/data/mariadb
+WP_DATA = /Home/data/wordpress  
+DB_DATA = /Home/data/mariadb
 
 all: up
 
