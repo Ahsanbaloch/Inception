@@ -53,3 +53,6 @@ prune: clean
 	@docker system prune -a --volumes -f || true
 
 .PHONY: up down stop start build clean re prune
+
+
+https://github.com/MarouanDoulahiane/inception-42/blob/main/srcs/docker-compose.yml
