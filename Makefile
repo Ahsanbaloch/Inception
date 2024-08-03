@@ -8,10 +8,11 @@ all: up
 # Start the building process
 # Create the WordPress and MariaDB data directories.
 # Start the containers in the background and leave them running.
-up: build
+up: 
 	@mkdir -p $(WP_DATA)
 	@mkdir -p $(DB_DATA)
-	docker-compose -f $(COMPOSE_FILE) up -d
+	docker-compose up --build
+#-f $(COMPOSE_FILE) up -d
 
 # Stop and remove all containers, networks, images, and volumes
 down:
@@ -27,7 +28,7 @@ start:
 
 # Build or rebuild services
 build:
-	docker-compose -f $(COMPOSE_FILE) build
+	docker-compose -f up --build
 
 # Clean the environment
 # Stop all running containers and remove them.
