@@ -1,36 +1,40 @@
-#define the path
+# Define the paths
 WP_DATA = /Home/data/wordpress  
 DB_DATA = /Home/data/mariadb
+COMPOSE_FILE = ./docker-compose.yml
 
 all: up
 
-# start the biulding process
-# create the wordpress and mariadb data directories.
-# start the containers in the background and leaves them running
+# Start the building process
+# Create the WordPress and MariaDB data directories.
+# Start the containers in the background and leave them running.
 up: build
 	@mkdir -p $(WP_DATA)
 	@mkdir -p $(DB_DATA)
-	docker-compose -f ./docker-compose.yml up -d
+	docker-compose -f $(COMPOSE_FILE) up -d
 
+# Stop and remove all containers, networks, images, and volumes
 down:
-	docker-compose -f ./docker-compose.yml down
+	docker-compose -f $(COMPOSE_FILE) down --rmi all -v --remove-orphans
 
+# Stop all running containers
 stop:
-	docker-compose -f ./docker-compose.yml stop
+	docker-compose -f $(COMPOSE_FILE) stop
 
+# Start all stopped containers
 start:
-	docker-compose -f ./docker-compose.yml start
+	docker-compose -f $(COMPOSE_FILE) start
 
+# Build or rebuild services
 build:
-	docker compose -f ./docker-compose.yml build
+	docker-compose -f $(COMPOSE_FILE) build
 
-#clean the containers
-#stop all running containers and remove them.
-#remove all images, volumes and networks.
-#remove the wordpress and mariadb data directories.
-#the (|| true) is used to ignore the error if there are no containers running to prevent the make command from stopping.
+# Clean the environment
+# Stop all running containers and remove them.
+# Remove all images, volumes, and networks.
+# Remove the WordPress and MariaDB data directories.
 clean:
-	@docker-compose down --rmi all -v --remove-orphans || true
+	@docker-compose -f $(COMPOSE_FILE) down --rmi all -v --remove-orphans || true
 	@docker stop $$(docker ps -qa) || true
 	@docker rm $$(docker ps -qa) || true
 	@docker rmi -f $$(docker images -qa) || true
@@ -39,9 +43,12 @@ clean:
 	@rm -rf $(WP_DATA) || true
 	@rm -rf $(DB_DATA) || true
 
+# Rebuild the environment
 re: clean up
 
+# Prune the system
+# Remove all unused containers, networks, images (both dangling and unreferenced), and optionally, volumes.
 prune: clean
 	@docker system prune -a --volumes -f || true
 
-.PHONY: up down stop start build ng mdb wp clean re prune
+.PHONY: up down stop start build clean re prune
