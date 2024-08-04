@@ -1,41 +1,39 @@
-# Define the paths
-WP_DATA = /home/data/wordpress  
-DB_DATA = /home/data/mariadb
-COMPOSE_FILE = ./docker-compose.yml
+WP_DATA = /home/data/wordpress #define the path to the wordpress data
+DB_DATA = /home/data/mariadb #define the path to the mariadb data
 
+# default target
 all: up
 
-# Start the building process
-# Create the WordPress and MariaDB data directories.
-# Start the containers in the background and leave them running.
-up: 
+# start the biulding process
+# create the wordpress and mariadb data directories.
+# start the containers in the background and leaves them running
+up: build
 	@mkdir -p $(WP_DATA)
 	@mkdir -p $(DB_DATA)
-	docker-compose up --build
-#-f $(COMPOSE_FILE) up -d
+	docker-compose -f ./docker-compose.yml up -d
 
-# Stop and remove all containers, networks, images, and volumes
+# stop the containers
 down:
-	docker-compose -f $(COMPOSE_FILE) down --rmi all -v --remove-orphans
+	docker-compose -f ./docker-compose.yml down
 
-# Stop all running containers
+# stop the containers
 stop:
-	docker-compose -f $(COMPOSE_FILE) stop
+	docker-compose -f ./docker-compose.yml stop
 
-# Start all stopped containers
+# start the containers
 start:
-	docker-compose -f $(COMPOSE_FILE) start
+	docker-compose -f ./docker-compose.yml start
 
-# Build or rebuild services
+# build the containers
 build:
-	docker-compose -f up --build
+	docker-compose -f ./docker-compose.yml build
 
-# Clean the environment
-# Stop all running containers and remove them.
-# Remove all images, volumes, and networks.
-# Remove the WordPress and MariaDB data directories.
+# clean the containers
+# stop all running containers and remove them.
+# remove all images, volumes and networks.
+# remove the wordpress and mariadb data directories.
+# the (|| true) is used to ignore the error if there are no containers running to prevent the make command from stopping.
 clean:
-	@docker-compose -f $(COMPOSE_FILE) down --rmi all -v --remove-orphans || true
 	@docker stop $$(docker ps -qa) || true
 	@docker rm $$(docker ps -qa) || true
 	@docker rmi -f $$(docker images -qa) || true
@@ -44,15 +42,9 @@ clean:
 	@rm -rf $(WP_DATA) || true
 	@rm -rf $(DB_DATA) || true
 
-# Rebuild the environment
+# clean and start the containers
 re: clean up
 
-# Prune the system
-# Remove all unused containers, networks, images (both dangling and unreferenced), and optionally, volumes.
+# prune the containers: execute the clean target and remove all containers, images, volumes and networks from the system.
 prune: clean
-	@docker system prune -a --volumes -f || true
-
-.PHONY: up down stop start build clean re prune
-
-
-https://github.com/MarouanDoulahiane/inception-42/blob/main/srcs/docker-compose.yml
+	@docker system prune -a --volumes -f
