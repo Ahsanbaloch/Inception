@@ -14,7 +14,7 @@ RUN mkdir -p /etc/nginx/ssl
 
 # generate the ssl certificate
 RUN openssl req -x509 -nodes -out /etc/nginx/ssl/inception.crt -keyout \
-    /etc/nginx/ssl/inception.key -subj "/C=Wolfsburg/ST=Niedersachsen/L=DE/O=42/OU=42/CN=ahsalam.fr/UID=ahsalam"
+    /etc/nginx/ssl/inception.key -subj "/C=DE/ST=NI/L=Wolfsburg/O=42/OU=42/CN=ahsalam.fr/UID=ahsalam"
 
 # copy the nginx configuration file
 COPY ./nginx.conf /etc/nginx/nginx.conf
